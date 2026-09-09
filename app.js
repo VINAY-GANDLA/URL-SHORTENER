@@ -2,6 +2,7 @@ const fs = require('fs/promises');
 const path = require('path');
 const http = require('http');
 const crypto = require("crypto");
+const {PORT} = require("./env.js");
 
 const DATA_FILE = path.join("data", "links.json");
 
@@ -103,7 +104,6 @@ const server = http.createServer(async (req, res) => {
         });
     }
 });
-const PORT = 3007;
 server.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);
 })

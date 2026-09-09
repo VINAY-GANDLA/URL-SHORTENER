@@ -60,7 +60,8 @@
                 // shorturllink.href=`/${links[shorturl]}`;
                 // listitem.textContent = `${shorturllink}->${links[shorturl]}`;
                 // list.appendChild(listitem);
-                listitem.innerHTML=`<a href="/${shorturl} target="_blank" >${window.location.origin}/${shorturl} </a> -> ${links[shorturl]}`;
+                const mainurl= links[shorturl].length>=30?`${links[shorturl].slice(0,30)}...` : links[shorturl];
+                listitem.innerHTML=`<a href="/${shorturl} target="_blank" >${window.location.origin}/${shorturl} </a> -> ${mainurl}`;
                 list.appendChild(listitem);
             }
         };

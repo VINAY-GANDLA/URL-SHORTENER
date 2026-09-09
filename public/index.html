@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL SHORTENER</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="container">
+        <h1>URL SHORTENER</h1>
+        <div id="box">
+            <form id="shortenurl" method='POST' action="shorten">
+                <label for="url">Enter the URL LINK:</label>
+                <input type="url" id="url" name="url">
+                <label for="shorturl">Enter the SHORT URL:</label>
+                <input type="text" id="shorturl" name="shorturl">
+                <button type="submit">SHORTEN</button>
+            </form>
+            <ul id="shortenurllinks"></ul>
+        </div>
+    </div>
+    <script>
+        document.getElementById('shortenurl').addEventListener('submit',async(event)=>{
+            event.preventDefault();
+            const formdata=new FormData(event.target);
+            const urllink=formdata.get("url");
+            const shorturl=formdata.get("shorturl");
+            // console.log(urllink,shorturl);
+            try{
+                const response=await fetch("/shorten",{
+                    method:"POST",
+                    headers:{"Content-Type":"application/json"},
+                    body:JSON.stringify({urllink,shorturl})
+                });
+                // console.log("fetch completed");
+                // console.log("status",response.status);
+                // console.log(response.ok);
+                if(response.ok){
+                    alert("Form Submitted successfully");
+                    event.target.reset();
+                    fetchURLlinks();
+                }
+                else{
+                    const msg=await response.text();
+                    alert(msg);
+                }
+            }
+            catch(err){
+                alert(err.message);
+            }
+        });
+
+        const list=document.querySelector("#shortenurllinks");
+        const createLists=(links)=>{
+            for(const shorturl in links){
+                const listitem = document.createElement("li");
+                // const shorturllink=document.createElement("a");
+                // shorturllink.textContent=shorturl;
+                // shorturllink.href=`/${links[shorturl]}`;
+                // listitem.textContent = `${shorturllink}->${links[shorturl]}`;
+                // list.appendChild(listitem);
+                listitem.innerHTML=`<a href="/${shorturl} target="_blank" >${window.location.origin}/${shorturl} </a> -> ${links[shorturl]}`;
+                list.appendChild(listitem);
+            }
+        };
+
+        const fetchURLlinks=async ()=>{
+            const response=await fetch("/links");
+            const data=await response.json();
+            //console.log("Links are: " ,data);
+            list.innerHTML="";
+            createLists(data);
+
+        }
+
+        
+
+
+    </script>
+</body>
+</html>
